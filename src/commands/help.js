@@ -32,7 +32,7 @@ module.exports = {
       
       message.client.commands.map(c => c.category).filter((v, i, a) => a.indexOf(v) === i).forEach(category => {
         const commands = message.client.commands.filter(c => c.category === category && !c.ownerOnly);
-        embed.addField(category, commands.map(c => `\`${c.name}\``).join(', '));
+        embed.addField(category || 'sem categoria', commands.map(c => `\`${c.name}\``).join(', '));
       });
 
       return message.reply({ embeds: [embed] });
@@ -42,11 +42,11 @@ module.exports = {
 
       const embed = new MessageEmbed()
         .setTitle(command.name)
-        .setDescription(command.description)
+        .setDescription(command.description || 'Sem descrição')
         .setColor(message.guild.me.displayColor)
         .setFields([
-          { name: 'Uso', value: `\`${command.usage}\``, inline: true },
-          { name: 'Categoria', value: `\`${command.category}\``, inline: true },
+          ... command.usage ? [{ name: 'Uso', value: `\`${command.usage}\``, inline: true }] : [],
+          ... command.category ? [{ name: 'Categoria', value: `\`${command.category}\``, inline: true }] : [],
           ... command.aliases ? [{ name: 'Aliases', value: `\`${command.aliases.join(' ')}\``, inline: true }] : [],
         ])
         .setTimestamp();
@@ -69,7 +69,7 @@ module.exports = {
 
       interaction.client.commands.map(c => c.category).filter((v, i, a) => a.indexOf(v) === i).forEach(category => {
         const commands = interaction.client.commands.filter(c => c.category === category && !c.ownerOnly);
-        embed.addField(category, commands.map(c => `\`${c.name}\``).join(', '));
+        embed.addField(category || 'sem categoria', commands.map(c => `\`${c.name}\``).join(', '));
       });
 
       return interaction.reply({ embeds: [embed] });
@@ -79,11 +79,11 @@ module.exports = {
 
       const embed = new MessageEmbed()
         .setTitle(command.name)
-        .setDescription(command.description)
+        .setDescription(command.description || 'Sem descrição')
         .setColor(interaction.guild.me.displayColor)
         .setFields([
-          { name: 'Uso', value: `\`${command.usage}\``, inline: true },
-          { name: 'Categoria', value: `\`${command.category}\``, inline: true },
+          ... command.usage ? [{ name: 'Uso', value: `\`${command.usage}\``, inline: true }] : [],
+          ... command.category ? [{ name: 'Categoria', value: `\`${command.category}\``, inline: true }] : [],
           ... command.aliases ? [{ name: 'Aliases', value: `\`${command.aliases.join(' ')}\``, inline: true }] : [],
         ])
         .setTimestamp();
