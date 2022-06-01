@@ -32,7 +32,7 @@ module.exports = {
       const option = interaction.options.getFocused(true).name;
 
       if (['deploy', 'help'].includes(commandName) && option === 'command') {
-        const commands = interaction.client.commands.filter(cmd => cmd.slashExecute);
+        const commands = interaction.client.commands.filter(cmd => cmd.slashExecute && !cmd.ownerOnly);
         const choicesData = commands.map(cmd => { return { name: cmd.name, value: cmd.name }; });
         interaction.respond(choicesData);
       }
