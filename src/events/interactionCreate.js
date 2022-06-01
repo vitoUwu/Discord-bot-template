@@ -11,13 +11,13 @@ module.exports = {
     if (interaction.isCommand()) {
       const command = interaction.client.commands.get(interaction.commandName);
       if (!command || !command.slashExecute) return interaction.reply({ embeds: [ error(`O comando \`${interaction.commandName}\` não existe!`) ] });
-      if (command.ownerOnly && interaction.author.id !== process.env.OWNER_ID) return;
+      if (command.ownerOnly && interaction.user.id !== process.env.OWNER_ID) return;
 
-      const userCooldown = interaction.client.commandCooldowns.get(`${interaction.author.id}_${command.name}`);
+      const userCooldown = interaction.client.commandCooldowns.get(`${interaction.user.id}_${command.name}`);
       if (userCooldown) return interaction.reply({ embeds: [ error(`Espere mais \`${((userCooldown - Date.now()) / 1000).toFixed(1)} segundos\` para executar o comando`) ] });
       if (command.cooldown && !userCooldown) {
-        interaction.client.commandCooldowns.set(`${interaction.author.id}_${command.name}`, Date.now() + command.cooldown * 1000);
-        setTimeout(() => interaction.client.commandCooldowns.delete(`${interaction.author.id}_${command.name}`), command.cooldown * 1000);
+        interaction.client.commandCooldowns.set(`${interaction.user.id}_${command.name}`, Date.now() + command.cooldown * 1000);
+        setTimeout(() => interaction.client.commandCooldowns.delete(`${interaction.user.id}_${command.name}`), command.cooldown * 1000);
       }
       try {
         command.slashExecute(interaction);
