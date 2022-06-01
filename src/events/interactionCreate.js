@@ -31,7 +31,7 @@ module.exports = {
       const commandName = interaction.commandName;
       const option = interaction.options.getFocused(true).name;
 
-      if (['deploy', 'help'].includes(commandName) && option === 'commando') {
+      if (['deploy', 'help'].includes(commandName) && option === 'comando') {
         const commands = interaction.client.commands.filter(cmd => cmd.slashExecute && !cmd.ownerOnly);
         const choicesData = commands.map(cmd => { return { name: cmd.name, value: cmd.name }; });
         interaction.respond(choicesData);
