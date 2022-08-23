@@ -23,7 +23,7 @@ module.exports = {
    * @returns 
    */
   async execute(message, args) {
-    const member = args[0] ? message.mentions.users.first() || await message.guild.members.fetch({ user: args[0], withPresences: true }).catch(() => null) : message.member;
+    const member = args[0] ? message.mentions.users.first() || await message.guild.members.fetch({ user: args[0] }).catch(() => null) : message.member;
     const user = member ? member.user : await message.client.users.fetch(args[0]).catch(() => null);
 
     if (!user) return message.channel.send({ embeds: [ error('Usuário não encontrado!') ] });
@@ -66,10 +66,6 @@ module.exports = {
       .addFields([
         { name: 'ID', value: `\`${user.id}\``, inline: true },
         { name: 'Tag', value: `\`${user.tag}\``, inline: true },
-        ... user.presence ? [
-          { name: 'Status', value: user.presence?.status, inline: true },
-          { name: 'Jogando', value: user.presence?.game || '** **', inline: true }
-        ] : [],
         ... member ? [
           ... member.nickname ? [{ name: 'Apelido', value: `\`${member.nickname}\`` }] : [],
           { name: 'Cor', value: `\`${member.displayHexColor}\``, inline: true },
