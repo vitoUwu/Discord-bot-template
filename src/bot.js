@@ -1,5 +1,5 @@
 const { Client } = require('discord.js');
-const logger = require('./utils/logger');
+const Logger = require('./utils/logger');
 const fs = require('fs');
 
 const client = new Client({
@@ -9,7 +9,7 @@ const client = new Client({
   ]
 });
 
-client.logger = logger;
+client.logger = new Logger('./src/logs', 'bot');
 client.commandCooldowns = new Map();
 
 const init = async () => {
