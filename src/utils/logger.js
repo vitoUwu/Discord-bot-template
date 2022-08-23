@@ -1,59 +1,64 @@
 const fs = require('fs');
 
-/**
- * 
- * @param {Boolean} colorized 
- * @returns {String}
- */
-const date = (colorized = true) => {
-  const today = `${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`;
-  if (colorized) return `${colors.yellow(`[${today}]`)}`;
-  else return `[${today}]`;
-};
-
-/**
- * 
- * @param {String} message 
- */
-const write = (message) => {
-  if (!fs.existsSync('./src/logs')) fs.mkdirSync('./src/logs');
-  fs.appendFileSync(`./src/logs/log_${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }).replace(/\//g, '_')}.txt`, `${message}\n`);
-};
-
-const colors = {
-  green: (str) => `\x1b[32m${str}\x1b[0m`,
-  red: (str) => `\x1b[31m${str}\x1b[0m`,
-  yellow: (str) => `\x1b[33m${str}\x1b[0m`,
-  blue: (str) => `\x1b[34m${str}\x1b[0m`,
-  magenta: (str) => `\x1b[35m${str}\x1b[0m`,
-  cyan: (str) => `\x1b[36m${str}\x1b[0m`,
-  white: (str) => `\x1b[37m${str}\x1b[0m`,
-  bg: {
-    green: (str) => `\x1b[42m${str}\x1b[0m`,
-    red: (str) => `\x1b[41m${str}\x1b[0m`,
-    yellow: (str) => `\x1b[43m${str}\x1b[0m`,
-    blue: (str) => `\x1b[44m${str}\x1b[0m`,
-    magenta: (str) => `\x1b[45m${str}\x1b[0m`,
-    cyan: (str) => `\x1b[46m${str}\x1b[0m`,
-    white: (str) => `\x1b[47m${str}\x1b[0m`,
-  },
-};
-
-module.exports = {
+module.exports = class Logger {
   /**
-   * 
-   * @param {String} message 
-   */
-  log: (message) => {
-    console.log(`${colors.green('[LOG]')} ${date()} ${message}`);
-    write(`[LOG] ${date(false)} ${message}`);
-  },
+	 *
+	 * @param {string} path
+	 * @param {string|undefined} prefix
+	 */
+  constructor(path, prefix) {
+    if (!path) throw Error('Invalid Path Argument');
+    this.path = path;
+    this.fileName = `${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }).replace(/\D/g, '')}_${new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }).replace(/\D/g, '')}.txt`;
+    this.prefix = prefix;
+  }
+
   /**
-   * 
-   * @param {String} message 
-   */
-  error: (message) => {
-    console.error(`${colors.red('[ERROR]')} ${date()} ${message}`);
-    write(`[ERROR] ${date(false)} ${message}`);
+	 *
+	 * @returns {string}
+	 */
+  get date() {
+    return `\x1b[33m[${new Date().toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} ${new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' })}]\x1b[0m`;
+  }
+
+  /**
+	 *
+	 * @param {string} data
+	 */
+  append(data) {
+    try {
+      if (!fs.existsSync(this.path)) fs.mkdirSync(this.path);
+      fs.appendFileSync(`${this.path}/${this.prefix ? `${this.prefix}_` : ''}${this.fileName}`, `${this.normalize(data)}\n`, { encoding: 'utf-8' });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /**
+	 *
+	 * @param {string} string
+	 * @returns {string}
+	 */
+  normalize(string) {
+    // eslint-disable-next-line no-control-regex
+    return string.replace(/\x1b\[\d{2}m|\x1b\[0m/g, '');
+  }
+
+  /**
+	 *
+	 * @param {string} string
+	 */
+  log(string) {
+    console.log(`\x1b[42m[LOG]\x1b[0m ${this.date} ${string}`);
+    this.append(`[LOG] ${this.date} ${string}`);
+  }
+
+  /**
+	 *
+	 * @param {string|Error}
+	 */
+  error(data) {
+    console.error(`\x1b[00m[ERROR]\x1b[0m ${this.date} ${data.stack ?? data}`);
+    this.append(`[ERROR] ${this.date} ${data.stack ?? data}`);
   }
 };
