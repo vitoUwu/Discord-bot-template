@@ -5,8 +5,7 @@ const fs = require('fs');
 const client = new Client({
   intents: [
     'GUILDS',
-    'GUILD_MESSAGES',
-    'GUILD_PRESENCES'
+    'GUILD_MESSAGES'
   ]
 });
 
