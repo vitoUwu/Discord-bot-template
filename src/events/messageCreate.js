@@ -1,4 +1,4 @@
-const { Message } = require('discord.js'); // eslint-disable-line no-unused-vars
+const { Message, ChannelType } = require('discord.js'); // eslint-disable-line no-unused-vars
 const { error } = require('../utils/embeds');
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
    */
   execute(message) {
     const prefix = process.env.PREFIX;
-    if (message.author.bot || message.channel.type !== 'GUILD_TEXT' || !message.content.startsWith(prefix)) return;
+    if (message.author.bot || message.channel.type !== ChannelType.GuildText || !message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();

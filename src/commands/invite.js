@@ -1,4 +1,4 @@
-const { Message, MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'); // eslint-disable-line no-unused-vars
+const { Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, PermissionFlagsBits, ButtonStyle } = require('discord.js'); // eslint-disable-line no-unused-vars
 
 module.exports = {
   name: 'invite',
@@ -14,20 +14,20 @@ module.exports = {
    */
   async execute(message) {
     const link = message.client.generateInvite({
-      permissions: ['ADMINISTRATOR'],
+      permissions: [PermissionFlagsBits.Administrator],
       scopes: ['bot', 'applications.commands'],
     });
 
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription('Clique no botão abaixo para convidar o bot para seu servidor.')
-      .setColor(message.guild.me.displayColor);
+      .setColor(message.guild.members.me.displayColor);
     
-    const row = new MessageActionRow()
+    const row = new ActionRowBuilder()
       .setComponents([
-        new MessageButton()
+        new ButtonBuilder()
           .setLabel('Convidar')
           .setURL(link)
-          .setStyle('LINK'),
+          .setStyle(ButtonStyle.Link),
       ]);
 
     message.reply({ embeds: [embed], components: [row] });

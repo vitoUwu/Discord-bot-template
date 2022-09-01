@@ -1,4 +1,4 @@
-const { Message, MessageActionRow, MessageButton, CommandInteraction } = require('discord.js'); // eslint-disable-line no-unused-vars
+const { Message, ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, ButtonStyle } = require('discord.js'); // eslint-disable-line no-unused-vars
 const { guildinfo: guildinfoEmbeds } = require('../utils/embeds');
 
 module.exports = {
@@ -19,33 +19,33 @@ module.exports = {
     const bannerEmbed = guildinfoEmbeds.banner(guild);
     const iconEmbed = guildinfoEmbeds.icon(guild);
 
-    const row = new MessageActionRow()
+    const row = new ActionRowBuilder()
       .setComponents([
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId('info-button')
           .setLabel('Informações')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
       ]);
 
     if (guild.emojis.cache.size) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('emojis-button')
         .setLabel('Emojis')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     if (guild.bannerURL()) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('banner-button')
         .setLabel('Banner')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     if (guild.iconURL()) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('icon-button')
         .setLabel('Ícone')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     const components = row.components.length > 1 ? [row] : [];
@@ -77,7 +77,7 @@ module.exports = {
   },
   /**
    * 
-   * @param {CommandInteraction} interaction 
+   * @param {ChatInputCommandInteraction} interaction 
    */
   async slashExecute(interaction) {
     const guild = interaction.guild;
@@ -87,33 +87,33 @@ module.exports = {
     const bannerEmbed = guildinfoEmbeds.banner(guild);
     const iconEmbed = guildinfoEmbeds.icon(guild);
 
-    const row = new MessageActionRow()
+    const row = new ActionRowBuilder()
       .setComponents([
-        new MessageButton()
+        new ButtonBuilder()
           .setCustomId('info-button')
           .setLabel('Informações')
-          .setStyle('PRIMARY')
+          .setStyle(ButtonStyle.Primary)
       ]);
 
     if (guild.emojis.cache.size) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('emojis-button')
         .setLabel('Emojis')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     if (guild.bannerURL()) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('banner-button')
         .setLabel('Banner')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     if (guild.iconURL()) row.addComponents([
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('icon-button')
         .setLabel('Ícone')
-        .setStyle('PRIMARY'),
+        .setStyle(ButtonStyle.Primary),
     ]);
 
     const components = row.components.length > 1 ? [row] : [];

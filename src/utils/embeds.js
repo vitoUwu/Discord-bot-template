@@ -1,14 +1,14 @@
-const { MessageEmbed, Guild } = require('discord.js'); // eslint-disable-line no-unused-vars
+const { EmbedBuilder, Guild } = require('discord.js'); // eslint-disable-line no-unused-vars
 const { capitalizeAll } = require('./capitalize');
 
 const guildinfo = {
   /**
    * 
    * @param {Guild} guild 
-   * @returns {Promise<MessageEmbed>}
+   * @returns {Promise<EmbedBuilder>}
    */
   info: async (guild) => {
-    let bans = guild.me.permissions.has('BAN_MEMBERS') ? (await guild.bans.fetch({ cache: false }).catch(() => null))?.size : 'Não tenho permissão';
+    let bans = guild.members.me.permissions.has('BanMembers') ? (await guild.bans.fetch({ cache: false }).catch(() => null))?.size : 'Não tenho permissão';
     if (typeof bans === 'number') bans = bans === 1000 ? '1000+' : bans;
 
     const channels = {
@@ -39,8 +39,8 @@ const guildinfo = {
       png: guild.stickers.cache.filter(e => e.format === 'PNG').size,
     };
 
-    return new MessageEmbed()
-      .setColor(guild.me.displayColor)
+    return new EmbedBuilder()
+      .setColor(guild.members.me.displayColor)
       .setTitle(`Informações sobre ${guild.name}`)
       .setThumbnail(guild.iconURL())
       .setImage(guild.bannerURL())
@@ -65,31 +65,31 @@ const guildinfo = {
           { name: 'Recursos', value: guild.features.map(feature => `\`${capitalizeAll(feature.replace(/_/g, ' '))}\``).join('\n'), inline: true },
           ... guild.features.includes('COMMUNITY') ? [{ name: 'Canal de Regras', value: `<#${guild.rulesChannelId}>`, inline: true }] : [],
         ] : [],
-        { name: `Boosts (${guild.premiumSubscriptionCount})`, value: `\`Tier: ${guild.premiumTier === 'NONE' ? '0' : guild.premiumTier.slice(-1)}\``, inline: true },
+        { name: `Boosts (${guild.premiumSubscriptionCount})`, value: `\`Tier: ${guild.premiumTier}\``, inline: true },
       ]);
   },
   /**
    * 
    * @param {Guild} guild 
-   * @returns {MessageEmbed}
+   * @returns {EmbedBuilder}
    */
   emojis: (guild) => {
     const animated = guild.emojis.cache.filter(e => e.animated).map(e => `<a:${e.name}:${e.id}>`).join(' ');
     const normal = guild.emojis.cache.filter(e => !e.animated).map(e => `<:${e.name}:${e.id}>`).join(' ');
-    return new MessageEmbed()
-      .setColor(guild.me.displayColor)
+    return new EmbedBuilder()
+      .setColor(guild.members.me.displayColor)
       .setTitle(`Emojis de ${guild.name}`)
       .setDescription(`**Normais**\n${normal}\n\n**Animados**\n${animated}`);
   },
   /**
    * 
    * @param {Guild} guild 
-   * @returns {MessageEmbed}
+   * @returns {EmbedBuilder}
    */
   icon: (guild) => {
     const guildIcon = guild.iconURL({ format: 'png', dynamic: true, size: 2048 });
-    return new MessageEmbed()
-      .setColor(guild.me.displayColor)
+    return new EmbedBuilder()
+      .setColor(guild.members.me.displayColor)
       .setTitle(`Ícone de ${guild.name}`)
       .setDescription(`[Clique aqui](${guildIcon}) para baixar o ícone`)
       .setImage(guildIcon);
@@ -97,12 +97,12 @@ const guildinfo = {
   /**
    * 
    * @param {Guild} guild 
-   * @returns {MessageEmbed}
+   * @returns {EmbedBuilder}
    */
   banner: (guild) => {
     const guildBanner = guild.bannerURL({ format: 'png', size: 2048 });
-    return new MessageEmbed()
-      .setColor(guild.me.displayColor)
+    return new EmbedBuilder()
+      .setColor(guild.members.me.displayColor)
       .setTitle(`Banner de ${guild.name}`)
       .setDescription(`[Clique aqui](${guildBanner}) para baixar o banner`)
       .setImage(guildBanner);
@@ -112,18 +112,18 @@ const guildinfo = {
 /**
  * 
  * @param {String} message
- * @returns {MessageEmbed}
+ * @returns {EmbedBuilder}
  */
-const error = (message) => new MessageEmbed()
+const error = (message) => new EmbedBuilder()
   .setColor('#ff0000')
   .setDescription(`🚫 **|** ${message}`);
 
 /**
  * 
  * @param {String} message 
- * @returns {MessageEmbed}
+ * @returns {EmbedBuilder}
  */
-const success = (message) => new MessageEmbed()
+const success = (message) => new EmbedBuilder()
   .setColor('#00ff00')
   .setDescription(`✅ **|** ${message}`);
 

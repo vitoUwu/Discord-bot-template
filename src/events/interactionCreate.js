@@ -19,6 +19,7 @@ module.exports = {
         interaction.client.commandCooldowns.set(`${interaction.user.id}_${command.name}`, Date.now() + command.cooldown * 1000);
         setTimeout(() => interaction.client.commandCooldowns.delete(`${interaction.user.id}_${command.name}`), command.cooldown * 1000);
       }
+      
       try {
         command.slashExecute(interaction);
       } catch (error) {

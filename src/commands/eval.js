@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const codeInBlock = /```(?:js)?\s(.+[^\\])```$/is;
 
 module.exports = {
@@ -38,7 +38,7 @@ module.exports = {
     if(type !== 'string') output = require('util').inspect(output);
     if(silent) return;
     output = `${output}`.length > 0 ? `${output}`.slice(0, 1800) : 'void';
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(`**Output**\n\`\`\`js\n${output}\n\`\`\``)
       .addFields([
         { name: 'Class', value: `\`\`\`yml\n${classe}\`\`\``, inline: true },
